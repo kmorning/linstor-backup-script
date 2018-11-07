@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eo pipefail
-VERSION=0.3.1
+VERSION=0.3.2
 
 cat <<EOT
 # Linstor configuration file
@@ -113,7 +113,7 @@ linstor -m volume-definition list | jq -jrc '.[] | select(.rsc_dfns) | .rsc_dfns
   while read rsc_name vlm_dfns; do
     echo "$vlm_dfns" | jq -r '.[]' | paste - - - |
       while read vlmnr minor size; do
-        echo "linstor volume-definition create -n $vlmnr -m $minor $rsc_name $size"
+        echo "linstor volume-definition create -n $vlmnr -m $minor $rsc_name ${size}KiB"
         linstor -m volume-definition list-properties $rsc_name $vlmnr | jq -jr '.[][] | .key, " ", .value, "\n"' |
           while read key value; do
             echo "  linstor volume-definition set-property $rsc_name $vlmnr $key $value"
