@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eo pipefail
-VERSION=0.3.0
+VERSION=0.3.1
 
 cat <<EOT
 # Linstor configuration file
@@ -32,7 +32,7 @@ echo
 echo "# Node Interfaces"
 linstor -m node list | jq -jrc '.[] | select(.nodes) | .nodes[] | .name, " ", (.net_interfaces[] | select(.name != "default") | [ .name, .address ] ), "\n"' |
   while read node_name net_interfaces; do
-    echo $net_interfaces | jq -r '.[]' | paste - - |
+    echo "$net_interfaces" | jq -r '.[]' | paste - - |
       while read interface_name ip; do
         echo "linstor node interface create $node_name $interface_name $ip"
       done
@@ -126,7 +126,7 @@ echo "# Resources"
 linstor -m resource list | jq -jr '.[] | select(.resources) | .resources[] | .name, " ", .node_name, " ", (.props[] | select(.key == "StorPoolName").value ), "\n"' |
   while read resource_definition_name node_name storage_pool; do
     echo "linstor resource create -s $storage_pool $node_name $resource_definition_name"
-    linstor -m resource list-properties $node_name $resource_definition_name | jq -r '.[][] | .key, .value ' | paste - - |
+    linstor -m resource list-properties $node_name $resource_definition_name | jq -jr '.[][] | .key, " ", .value, "\n"' |
       while read key value; do
         echo "  linstor resource set-property $node_name $resource_definition_name $key $value"
       done
