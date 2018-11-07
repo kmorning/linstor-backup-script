@@ -5,5 +5,5 @@ Before using please install `jq`.
 
 **Usage:**
 ```
-./linstor-backup.sh
+./linstor-backup.sh | tee linstor_$(date +%Y-%m-%d).sh
 ```
