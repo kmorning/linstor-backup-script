@@ -5,7 +5,7 @@ Before using please install `jq`.
 
 **Installation:**
 ```
-wget -o linstor-backup.sh https://github.com/kvaps/linstor-backup-script/raw/master/linstor-backup.sh
+wget -O linstor-backup.sh https://github.com/kvaps/linstor-backup-script/raw/master/linstor-backup.sh
 chmod +x linstor-backup.sh
 ```
 
