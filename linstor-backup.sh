@@ -38,17 +38,6 @@ linstor -m node list | jq -jrc '.[] | select(.nodes) | .nodes[] | .name, " ", (.
       done
   done
 
-echo
-echo "# Storage Pool Definitions"
-linstor -m storage-pool-definition list | jq -r '.[] | select(.stor_pool_dfns) | .stor_pool_dfns[] | .stor_pool_name' |
-  while read name; do
-    echo "linstor storage-pool-definition create $name"
-    linstor -m storage-pool-definition list-properties $name | jq -jr '.[][] | .key, " ", .value, "\n"' |
-      while read key value; do
-        echo "  linstor storage-pool-definition set-property $name $key $value"
-      done
-  done
-
 storage_pool_properties() {
   linstor -m storage-pool list-properties $node_name $name | jq -jr '.[][] | .key, " ", .value, "\n"' |
     while read key value; do
