@@ -98,9 +98,9 @@ linstor -m resource-group list | jq -r '.[][] | "\(.name) \(.select_filter.place
 
 echo
 echo "# Resource Definitions"
-linstor -m resource-definition list | jq -jr '.[] | select(.rsc_dfns) | .rsc_dfns[] | .rsc_name, " ", .rsc_dfn_port, "\n"' |
-  while read rsc_name rsc_dfn_port; do
-    echo "linstor resource-definition create -p $rsc_dfn_port $rsc_name"
+linstor -m --output-version v1 resource-definition list | jq -r '.[][] | "\(.name) \(.layer_data[0].data.port) \(.resource_group_name)"' |
+  while read name port resource_group; do
+    echo "linstor resource-definition create -p $port --resource-group $resource_group $name"
     linstor -m resource-definition list-properties $rsc_name | jq -jr '.[][] | .key, " ", .value, "\n"' |
       while read key value; do
         echo "  linstor resource-definition set-property $rsc_name $key $value"
